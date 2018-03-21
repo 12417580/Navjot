@@ -1,0 +1,75 @@
+#import <Foundation/Foundation.h>
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool
+    {
+       char str[50] = {0};                  // init all to 0
+       printf("Equation to Solve : ");
+       scanf("%s", str);                    // input expression 
+       printf("Expression is %s\n", str);   // print buffer
+      
+       NSString *lastName = [NSString stringWithUTF8String:str];
+       
+    
+       NSLog(@"lastName=%@", lastName);
+        
+        //  test calculator code command line Objective C
+        //================================================
+        NSLog(@"Hello, Calculator ");
+        NSUInteger len = [lastName length];
+        unichar buffer[len];
+        
+        [lastName getCharacters:buffer range:NSMakeRange(0, len)];
+        
+        NSString *a = @"";
+        NSMutableArray * a1 = [NSMutableArray new];
+        for(int i = 0; i < len; i++) {
+            NSLog(@"%C", buffer[i]);
+            char num = buffer[i];
+            if(num>='0' && num<='9') {
+                a = [NSString stringWithFormat:@"%@%c", a, buffer[i]];
+            }
+            else {
+                [a1 addObject:a];
+                a= @"";
+                 NSString *op = [NSString stringWithFormat:@"%c", buffer[i]];
+                [a1 addObject:op];
+                }
+        }
+        [a1 addObject:a];
+        a= @"";
+        NSLog(@"%@", a1);
+        
+        NSUInteger oplength = [a1 count];
+        float ans=0;
+        for(int i = 0; i < oplength; i++) {
+            if([a1[i]  isEqual: @"-"]){
+                ans = [a1[i-1] intValue] - [a1[i+1] intValue];
+                NSLog(@"Sub Answer is: %f",ans);
+                NSLog(@"Object Removed %@",a1[i+1]);
+                [a1 removeObject:a1[i+1]];
+                 NSLog(@"Object Removed %@",a1[i-1]);
+                [a1 removeObject:a1[i-1]];
+                
+               NSLog(@"Object Removed %@",a1[i]);
+                [a1 removeObject:a1[i]];
+                
+                [a1 insertObject:[NSString stringWithFormat:@"%f", ans] atIndex:i];
+                //i=0;
+            }
+            else if([a1[i]  isEqual: @"+"]){
+                ans = [a1[i-1] intValue] + [a1[i+1] intValue];
+            }
+            else if([a1[i]  isEqual: @"*"]){
+                ans = [a1[i-1] intValue] * [a1[i+1] intValue];
+            }
+            else if([a1[i]  isEqual: @"/"]){
+                ans = [a1[i-1] intValue] / [a1[i+1] intValue];
+            }
+        }
+        
+        NSLog(@"Answer is: %f",ans);
+        
+        }
+    return 0;
+}
